@@ -56,3 +56,11 @@ npm run db:setup
 ```
 저장된 벡터를 검색해서 검색증강생성(rag)를 구현.
 ```
+
+```
+.dev.vars를 바탕으로 secret put을 하고, workers로 배포.
+```
+
+```
+npx wrangler login
+```
