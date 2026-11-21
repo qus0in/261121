@@ -1,6 +1,6 @@
 import "./styles.css";
 import { render } from "solid-js/web";
-import { createSignal, For } from "solid-js";
+import { createSignal, For, onMount } from "solid-js";
 import { createStore } from "solid-js/store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,12 @@ function App() {
   const [text, setText] = createSignal("");
   const [busy, setBusy] = createSignal(false);
 
+  onMount(async () => {
+    try {
+      setMsgs(await (await fetch("/api/messages")).json());
+    } catch {}
+  });
+
   async function send(e: Event) {
     e.preventDefault();
     const content = text().trim();
@@ -19,14 +25,13 @@ function App() {
     setText("");
     setBusy(true);
     setMsgs(msgs.length, { role: "user", content });
-    const payload = [...msgs];
     const i = msgs.length;
     setMsgs(i, { role: "assistant", content: "" });
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ messages: payload }),
+        body: JSON.stringify({ content }),
       });
       const reader = res.body!.pipeThrough(new TextDecoderStream()).getReader();
       for (;;) {

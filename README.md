@@ -20,3 +20,25 @@ GEMINI_API_KEY=
 # Gemma 4 26B
 GEMINI_API_KEY 를 활용하여 Gemini 3.5 Flash Lite 로 LLM 엔진을 적용
 ```
+
+- https://console.neon.tech/
+
+![alt text](image.png)
+
+![alt text](image-1.png)
+
+![alt text](image-2.png)
+
+```sh
+# .dev.vars
+NEON_CONNECTION_URL=
+```
+
+```
+NEON_CONNECTION_URL 을 바탕으로 drizzle로 채팅 메모리를 구현. 사용자는 구별하지 않음.
+```
+
+```sh
+# 스키마 명령어 실행
+npm run db:push
+```
