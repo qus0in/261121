@@ -1,0 +1,7 @@
+{
+  "name": "chatbot",
+  "main": "src/worker/index.ts",
+  "compatibility_date": "2025-06-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": { "not_found_handling": "single-page-application" }
+}
