@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Upload } from "./upload";
 import { Input } from "@/components/ui/input";
 
-type Msg = { role: "user" | "assistant"; content: string };
+type Source = { name: string; page: number; similarity: number };
+type Msg = { role: "user" | "assistant"; content: string; sources?: Source[] };
 
 function App() {
   const [msgs, setMsgs] = createStore<Msg[]>([]);
@@ -34,6 +35,10 @@ function App() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ content }),
       });
+      try {
+        const src = JSON.parse(decodeURIComponent(res.headers.get("X-Sources") ?? "[]")) as Source[];
+        if (src.length) setMsgs(i, "sources", src);
+      } catch {}
       const reader = res.body!.pipeThrough(new TextDecoderStream()).getReader();
       for (;;) {
         const { done, value } = await reader.read();
@@ -55,6 +60,11 @@ function App() {
             <div class={m.role === "user" ? "flex justify-end" : "flex"}>
               <div class={`max-w-[80%] whitespace-pre-wrap rounded-lg px-3 py-2 text-sm ${m.role === "user" ? "bg-neutral-900 text-white" : "bg-neutral-100"}`}>
                 {m.content || "…"}
+                {m.sources?.length ? (
+                  <div class="mt-2 border-t border-neutral-300 pt-1 text-xs text-neutral-500">
+                    출처: {[...new Set(m.sources.map((s) => `${s.name} p.${s.page}`))].join(", ")}
+                  </div>
+                ) : null}
               </div>
             </div>
           )}

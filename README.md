@@ -52,3 +52,7 @@ Gemini Embedding 2 와 pgvector를 활용하여 업로드한 pdf를 적절히 �
 ```sh
 npm run db:setup
 ```
+
+```
+저장된 벡터를 검색해서 검색증강생성(rag)를 구현.
+```

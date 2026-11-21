@@ -10,6 +10,7 @@ import { ingestPdf, search } from "./rag";
 
 type Env = { Bindings: { GEMINI_API_KEY: string; NEON_CONNECTION_URL: string } };
 
+const MIN_SIMILARITY = 0.4; // 이보다 낮은 청크는 컨텍스트에서 제외
 const app = new Hono<Env>();
 const getDb = (url: string) => drizzle(neon(url));
 
@@ -58,8 +59,10 @@ app.post("/api/chat", async (c) => {
     streaming: true,
   });
   let context = "";
+  let sources: { name: string; page: number; similarity: number }[] = [];
   try {
-    const hits = await search(db, c.env.GEMINI_API_KEY, content);
+    const hits = (await search(db, c.env.GEMINI_API_KEY, content)).filter((h) => h.similarity >= MIN_SIMILARITY);
+    sources = hits.map((h) => ({ name: h.name, page: h.page, similarity: Math.round(h.similarity * 100) / 100 }));
     if (hits.length)
       context =
         "\n\nUse the following document excerpts when relevant and cite them as (파일명 p.N). If they don't contain the answer, say so.\n\n" +
@@ -71,6 +74,7 @@ app.post("/api/chat", async (c) => {
     ...rows.map((m) => (m.role === "user" ? new HumanMessage(m.content) : new AIMessage(m.content))),
   ];
 
+  c.header("X-Sources", encodeURIComponent(JSON.stringify(sources)));
   return streamText(c, async (stream) => {
     let reply = "";
     for await (const chunk of await model.stream(history)) {
