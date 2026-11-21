@@ -3,6 +3,7 @@ import { render } from "solid-js/web";
 import { createSignal, For, onMount } from "solid-js";
 import { createStore } from "solid-js/store";
 import { Button } from "@/components/ui/button";
+import { Upload } from "./upload";
 import { Input } from "@/components/ui/input";
 
 type Msg = { role: "user" | "assistant"; content: string };
@@ -47,6 +48,7 @@ function App() {
 
   return (
     <div class="mx-auto flex h-screen max-w-2xl flex-col p-4">
+      <nav class="mb-3 flex gap-4 text-sm"><b>채팅</b><a class="underline" href="/upload">PDF 업로드</a></nav>
       <div class="flex-1 space-y-3 overflow-y-auto">
         <For each={msgs}>
           {(m) => (
@@ -66,4 +68,4 @@ function App() {
   );
 }
 
-render(() => <App />, document.getElementById("root")!);
+render(() => (location.pathname.startsWith("/upload") ? <Upload /> : <App />), document.getElementById("root")!);

@@ -42,3 +42,13 @@ NEON_CONNECTION_URL 을 바탕으로 drizzle로 채팅 메모리를 구현. 사�
 # 스키마 명령어 실행
 npm run db:push
 ```
+
+![alt text](image-3.png)
+
+```
+Gemini Embedding 2 와 pgvector를 활용하여 업로드한 pdf를 적절히 청킹하여 rag로 활용할 수 있게 하는 etl을 구성. pdf 업로드 페이지가 산출물.
+```
+
+```sh
+npm run db:setup
+```

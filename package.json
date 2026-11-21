@@ -6,18 +6,22 @@
     "dev": "vite",
     "build": "vite build",
     "deploy": "vite build && wrangler deploy",
-    "db:push": "node --env-file=.dev.vars node_modules/drizzle-kit/bin.cjs push"
+    "db:push": "node --env-file=.dev.vars node_modules/drizzle-kit/bin.cjs push",
+    "db:init": "node --env-file=.dev.vars scripts/init-db.mjs",
+    "db:setup": "npm run db:init && npm run db:push"
   },
   "dependencies": {
     "@langchain/core": "^1.5.0",
     "@langchain/google-genai": "^2.3.7",
+    "@langchain/textsplitters": "^1.0.2",
     "@neondatabase/serverless": "^1.2.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.45.4",
     "hono": "^4.6.0",
     "solid-js": "^1.9.0",
-    "tailwind-merge": "^2.5.0"
+    "tailwind-merge": "^2.5.0",
+    "unpdf": "^2.2.1"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.0.0",
